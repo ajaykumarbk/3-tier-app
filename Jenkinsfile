@@ -12,9 +12,9 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    docker.build("frontend", "./frontend")
-                    docker.build("backend", "./backend")
-                    docker.build("database", "./database")
+                    sh 'sudo docker build -t frontend ./frontend'
+                    sh 'sudo docker build -t backend ./backend'
+                    sh 'sudo docker build -t database ./database'
                 }
             }
         }
@@ -22,17 +22,17 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'DOCKER_HUB_CREDENTIALS') {
-                        docker.image("frontend").push("latest")
-                        docker.image("backend").push("latest")
-                        docker.image("database").push("latest")
+                        sh 'sudo docker image "frontend" push "latest"'
+                        sh 'sudo docker image "backend" push "latest"'
+                        sh 'sudo docker image "database" push "latest"'
                     }
                 }
             }
         }
         stage('Deploy with Docker Compose') {
             steps {
-                sh 'docker-compose down'
-                sh 'docker-compose up -d'
+                sh 'sudo docker-compose down'
+                sh 'sudo docker-compose up -d'
             }
         }
     }
@@ -42,3 +42,4 @@ pipeline {
         }
     }
 }
+
